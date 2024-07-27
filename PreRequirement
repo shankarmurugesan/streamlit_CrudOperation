@@ -35,3 +35,9 @@ Table :
 #mycursor.execute("create database cruddb")
 
 #mycursor.execute("create table cruddb.aadhar(adharid varchar(60) primary key,name varchar(60) not null,sex varchar(70),age int(3),dob date,address varchar(100))")
+
+
+Run The project:
+
+
+streamlit run CrudOperation.py
