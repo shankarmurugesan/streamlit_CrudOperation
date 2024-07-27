@@ -13,11 +13,11 @@ mycursor = mydb.cursor(buffered=True)
 
 def show():   
     display = '''
-        SELECT * from cruddb.aadhar
+        SELECT * from aadhar
     '''
     mycursor.execute(display)
     save_display = mycursor.fetchall()
-    for sd in save_display : 
+    for sd in save_display:
         adharid = st.write(f'adharid : {sd[0]}')
         name = st.write(f'name : {sd[1]}')
         sex = st.write(f'sex : {sd[2]}')
@@ -33,7 +33,7 @@ def select_show():
 
     #mysql command to select the data
     display = '''
-        SELECT adharid,name,sex,age,dob,address from stu WHERE id = %s
+        SELECT adharid,name,sex,age,dob,address from aadhar WHERE id = %s
     '''
   # we use %s to get the input outside from the command (it can be in the code or from user)
     value = adharid
@@ -67,44 +67,40 @@ def insert():
 
 def update():
   #function to update data
-    command = '''SELECT adharid from cruddb.aadhar'''
+    command = '''SELECT adharid from aadhar'''
     mycursor.execute(command)
     id_data = mycursor.fetchall()
-    select_id = st.selectbox('Id: ', [adharid for adharid in id_data])
+    select_id = st.selectbox('adharid: ', [adharid for adharid in id_data])
 
     if select_id : 
         update_name = st.text_input('Enter Name: ')
-        update_sex = st.text_input('Enter Sex: ')
-        update_age = st.text_input('Enter Age: ')
-        update_dob = st.text_input('Enter Dob: ')
-        update_address = st.text_input('Enter Address: ')
+        # update_sex = st.text_input('Enter Sex: ')
+        # update_age = st.text_input('Enter Age: ')
+        # update_dob = st.text_input('Enter Dob: ')
+        # update_address = st.text_input('Enter Address: ')
 
         if st.button('Update'):
             update_comd = '''
-            UPDATE cruddb.aadhar
-            SET name = %s,
-            sex = %s,
-            age = %s,
-            dob = %s,
-            address=%s
+            UPDATE aadhar
+            SET name = %s
             WHERE adharid = %s
             '''
-            val = (update_name, select_id[0], update_sex, select_id[1],update_age,select_id[2],update_dob,select_id[3],update_address ,select_id[4] )
+            #val = (update_name, select_id[0], update_sex, select_id[1],update_age,select_id[2],update_dob,select_id[3],update_address ,select_id[4] )
+            val = (update_name, select_id[0] )
             mycursor.execute(update_comd, val )
             mydb.commit()
             st.success('Data Updated')
 
-
 def delete():
   #function for deleting data
-    command = '''SELECT adharid from cruddb.aadhar'''
+    command = '''SELECT adharid from aadhar'''
     mycursor.execute(command)
     id_data = mycursor.fetchall()
 
     select_id = st.selectbox('adharid: ', [adharid for adharid in id_data]) 
     if select_id :
         display = '''
-            SELECT id , name from stu where id = %s
+            SELECT adharid,name,sex,age,dob,address from aadhar where adharid = %s
         '''
         mycursor.execute(display,select_id)
         save_display = mycursor.fetchall()
@@ -119,18 +115,16 @@ def delete():
 
         if st.button('delete'):
             delete_comd = '''
-                DELETE FROM cruddb.aadhar
+                DELETE FROM aadhar
                 WHERE adharid = %s
             '''
             value = select_id
             mycursor.execute(delete_comd,value)
             mydb.commit()
             st.success('data deleted')
-
-
 def main():
     st.title('CRUD OPERATIONS')
-    page = st.sidebar.selectbox('Select page', ['DISPLAY','INSERT','UPDATE','DELETE'] )
+    page = st.sidebar.selectbox('Select page', ['DISPLAY','INSERT','UPDATE','DELETE'])
 
     if page == 'DISPLAY':
         show()
@@ -144,8 +138,5 @@ def main():
     elif page == 'DELETE':
         delete()
 
-
 if __name__ == "__main__":
     main()
-
-
